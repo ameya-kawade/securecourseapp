@@ -16,6 +16,7 @@ import React, { useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { Button } from 'react-native-paper';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 // --- Types ---
 interface Course {
@@ -110,6 +111,8 @@ const Tabs = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (t
   </View>
 );
 
+const router = useRouter();
+
 const CourseCard = ({ course }: { course: Course }) => (
   <View className="bg-[#1E293B] rounded-2xl mx-4 mb-5 overflow-hidden border border-[#2D3748]">
     {/* Course Image */}
@@ -145,7 +148,10 @@ const CourseCard = ({ course }: { course: Course }) => (
         className="rounded-xl"
         contentStyle={{ height: 48 }}
         labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
-        onPress={() => console.log('Download certificate')}
+        onPress={() => {
+          console.log('Download certificate');
+          router.push(`/(course)/${course.id}`);
+        }}
       >
         Download Certificate
       </Button>
