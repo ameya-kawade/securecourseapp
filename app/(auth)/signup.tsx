@@ -17,6 +17,7 @@ import { router } from 'expo-router';
 import GradientBackground from '../../components/GradientBackground';
 import AuthHeader from '../../components/AuthHeader';
 import { colors } from '../../theme/colors';
+import { useAuthStore } from '../../store/authStore';
 import { spacing } from '../../theme/spacing';
 
 export default function Signup() {
@@ -25,9 +26,20 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignup = () => {
-    // Navigate to login after successful simulated signup
-    router.replace('/(auth)/login');
+  const login = useAuthStore((state) => state.login);
+
+  const handleSignup = async () => {
+    // Mock user creation
+    const mockUser = {
+      id: Math.random().toString(36).substring(7),
+      fullName,
+      email,
+      employeeId: 'EMP-' + Math.floor(10000 + Math.random() * 90000)
+    };
+    
+    // Log the user in after "successful" signup
+    await login('dummy-token', mockUser);
+    router.replace('/(tabs)/dashboard');
   };
 
   return (

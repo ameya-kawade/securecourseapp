@@ -28,6 +28,7 @@ import ComplianceStatus from '../../components/ComplianceStatus';
 
 import DocumentItem from '../../components/DocumentItem';
 import { colors } from '../../theme/colors';
+import { useAuthStore } from '../../store/authStore';
 
 const MOCK_COURSES = [
   { id: '1', title: 'Advanced React Patterns', progress: 65, tag: 'TECH' },
@@ -35,6 +36,8 @@ const MOCK_COURSES = [
 ];
 
 export default function Dashboard() {
+  const user = useAuthStore((state) => state.user);
+
   const renderCourse = ({ item }: { item: typeof MOCK_COURSES[0] }) => (
     <CourseCard 
       title={item.title} 
@@ -49,7 +52,7 @@ export default function Dashboard() {
 
         <DashboardHeader />
 
-        <WelcomeSection userName="Alex" weeklyGoalPercentage={75} />
+        <WelcomeSection userName={user?.fullName?.split(' ')[0] || 'Trainee'} weeklyGoalPercentage={75} />
 
         {/* Stats Row */}
         <View className="flex-row justify-between mb-8">
