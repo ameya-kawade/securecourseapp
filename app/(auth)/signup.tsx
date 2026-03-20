@@ -14,11 +14,11 @@ import {
 } from 'react-native-paper';
 import { SafeAreaView as CSafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import GradientBackground from '../../components/GradientBackground';
-import AuthHeader from '../../components/AuthHeader';
-import { colors } from '../../theme/colors';
-import { useAuthStore } from '../../store/authStore';
-import { spacing } from '../../theme/spacing';
+import GradientBackground from '@/components/GradientBackground';
+import AuthHeader from '@/components/AuthHeader';
+import { colors } from '@/theme/colors';
+import { useAuthStore } from '@/store/authStore';
+import { spacing } from '@/theme/spacing';
 
 export default function Signup() {
   const [fullName, setFullName] = useState('');
@@ -26,7 +26,7 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const login = useAuthStore((state) => state.login);
+  const login = useAuthStore((state: any) => state.login);
 
   const handleSignup = async () => {
     // Mock user creation

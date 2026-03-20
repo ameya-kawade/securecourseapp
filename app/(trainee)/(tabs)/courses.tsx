@@ -1,6 +1,6 @@
 // import { View, Text } from 'react-native';
-// import GradientBackground from '../../components/GradientBackground';
-// import { colors } from '../../theme/colors';
+// import GradientBackground from '@/components/GradientBackground';
+// import { colors } from '@/theme/colors';
 
 // export default function CoursesScreen() {
 //   return (
@@ -13,10 +13,11 @@
 
 // src/screens/CompletedCoursesScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity, Image, StatusBar } from 'react-native';
+import { View, Text, ScrollView, TextInput, TouchableOpacity, Image, StatusBar, Pressable } from 'react-native';
 import { Button } from 'react-native-paper';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // --- Types ---
 interface Course {
@@ -111,53 +112,59 @@ const Tabs = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (t
   </View>
 );
 
-const router = useRouter();
 
-const CourseCard = ({ course }: { course: Course }) => (
-  <View className="bg-[#1E293B] rounded-2xl mx-4 mb-5 overflow-hidden border border-[#2D3748]">
-    {/* Course Image */}
-    <Image
-      source={{ uri: course.image }}
-      className="w-full h-40"
-      resizeMode="cover"
-    />
+const CourseCard = ({ course }: { course: Course }) => {
+  const router = useRouter();
+  return (
+    <Pressable
+      className="bg-[#1E293B] rounded-2xl mx-4 mb-5 overflow-hidden border border-[#2D3748]"
+      onPress={() => {
+        router.push(`/(trainee)/(course)/${course.id}`);
+      }}
+    >
+      {/* Course Image */}
+      <Image
+        source={{ uri: course.image }}
+        className="w-full h-40"
+        resizeMode="cover"
+      />
 
-    {/* Course Details */}
-    <View className="p-4">
-      <Text className="text-white text-lg font-bold mb-3">{course.title}</Text>
+      {/* Course Details */}
+      <View className="p-4">
+        <Text className="text-white text-lg font-bold mb-3">{course.title}</Text>
 
-      <View className="flex-row items-center mb-1">
-        <MaterialCommunityIcons name="calendar-blank" size={16} color="#94A3B8" />
-        <Text className="text-[#94A3B8] text-sm ml-2">
-          Completed: {course.completedDate}
-        </Text>
+        <View className="flex-row items-center mb-1">
+          <MaterialCommunityIcons name="calendar-blank" size={16} color="#94A3B8" />
+          <Text className="text-[#94A3B8] text-sm ml-2">
+            Completed: {course.completedDate}
+          </Text>
+        </View>
+
+        <View className="flex-row items-center mb-5">
+          <MaterialCommunityIcons name="target" size={16} color="#3B82F6" />
+          <Text className="text-[#3B82F6] text-sm font-semibold ml-2">
+            Final Score: {course.score}%
+          </Text>
+        </View>
+
+        <Button
+          mode="contained"
+          buttonColor="#0D6EFD"
+          textColor="white"
+          icon="download"
+          className="rounded-xl"
+          contentStyle={{ height: 48 }}
+          labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
+          onPress={() => {
+            console.log('Download certificate');
+          }}
+        >
+          Download Certificate
+        </Button>
       </View>
-
-      <View className="flex-row items-center mb-5">
-        <MaterialCommunityIcons name="target" size={16} color="#3B82F6" />
-        <Text className="text-[#3B82F6] text-sm font-semibold ml-2">
-          Final Score: {course.score}%
-        </Text>
-      </View>
-
-      <Button
-        mode="contained"
-        buttonColor="#0D6EFD"
-        textColor="white"
-        icon="download"
-        className="rounded-xl"
-        contentStyle={{ height: 48 }}
-        labelStyle={{ fontWeight: 'bold', fontSize: 14 }}
-        onPress={() => {
-          console.log('Download certificate');
-          router.push(`/(course)/${course.id}`);
-        }}
-      >
-        Download Certificate
-      </Button>
-    </View>
-  </View>
-);
+    </Pressable>
+  )
+};
 
 // --- Main Screen ---
 
@@ -165,10 +172,10 @@ export default function Courses() {
   const [activeTab, setActiveTab] = useState('Completed');
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0F172A]">
+    <SafeAreaView className="flex-1 bg-[#0F172A] pt-5">
       <StatusBar barStyle="light-content" backgroundColor="#0F172A" />
-
-      <Header />
+      {/* 
+      <Header /> */}
       <SearchBar />
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 

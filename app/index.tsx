@@ -23,7 +23,7 @@ export default function Index() {
   // Redirect based on auth status
   if (isAuthenticated) {
     // @ts-ignore
-    return <Redirect href="/(tabs)/dashboard" />;
+    return <Redirect href="/(trainee)/(tabs)/dashboard" />;
   }
 
   // @ts-ignore

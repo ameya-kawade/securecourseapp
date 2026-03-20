@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../../theme/colors';
+import { colors } from '@/theme/colors';
 
 export default function TabsLayout() {
   return (
@@ -51,6 +51,15 @@ export default function TabsLayout() {
           title: 'Messages',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbubbles" color={color} size={24} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" color={color} size={24} />
           ),
         }}
       />

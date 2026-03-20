@@ -19,16 +19,16 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import GradientBackground from '../../components/GradientBackground';
-import StatCard from '../../components/StatCard';
-import CourseCard from '../../components/CourseCard';
-import DashboardHeader from '../../components/DashboardHeader';
-import WelcomeSection from '../../components/WelcomeSection';
-import ComplianceStatus from '../../components/ComplianceStatus';
+import GradientBackground from '@/components/GradientBackground';
+import StatCard from '@/components/StatCard';
+import CourseCard from '@/components/CourseCard';
+import DashboardHeader from '@/components/DashboardHeader';
+import WelcomeSection from '@/components/WelcomeSection';
+import ComplianceStatus from '@/components/ComplianceStatus';
 
-import DocumentItem from '../../components/DocumentItem';
-import { colors } from '../../theme/colors';
-import { useAuthStore } from '../../store/authStore';
+import DocumentItem from '@/components/DocumentItem';
+import { colors } from '@/theme/colors';
+import { useAuthStore } from '@/store/authStore';
 
 const MOCK_COURSES = [
   { id: '1', title: 'Advanced React Patterns', progress: 65, tag: 'TECH' },
@@ -36,19 +36,19 @@ const MOCK_COURSES = [
 ];
 
 export default function Dashboard() {
-  const user = useAuthStore((state) => state.user);
+  const user = useAuthStore((state: any) => state.user);
 
   const renderCourse = ({ item }: { item: typeof MOCK_COURSES[0] }) => (
-    <CourseCard 
-      title={item.title} 
-      progress={item.progress} 
-      tag={item.tag} 
+    <CourseCard
+      title={item.title}
+      progress={item.progress}
+      tag={item.tag}
     />
   );
 
   return (
     <GradientBackground className="flex-1">
-      <ScrollView contentContainerStyle={{ padding: 32, paddingTop: 80, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ padding: 32, paddingTop: 60, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
 
         <DashboardHeader />
 
@@ -70,11 +70,11 @@ export default function Dashboard() {
             </TouchableOpacity>
           </View>
           {MOCK_COURSES.map((item) => (
-            <CourseCard 
+            <CourseCard
               key={item.id}
-              title={item.title} 
-              progress={item.progress} 
-              tag={item.tag} 
+              title={item.title}
+              progress={item.progress}
+              tag={item.tag}
             />
           ))}
         </View>
@@ -89,21 +89,17 @@ export default function Dashboard() {
 
         <View className="bg-transparent rounded-[40px] border border-white/10 overflow-hidden">
           {[
-            { id: '1', title: 'Q3 Training Report', date: 'Oct 12, 2025', icon: 'file-document-outline' },
-            { id: '2', title: 'Safety Certificate', date: 'Sep 30, 2025', icon: 'certificate-outline' },
+            { id: '1', title: 'Q3 Training Report', date: 'Oct 12, 2025', icon: 'document-text-outline' },
+            { id: '2', title: 'Safety Certificate', date: 'Sep 30, 2025', icon: 'document-text-outline' },
           ].map((item) => (
-            <DocumentItem 
+            <DocumentItem
               key={item.id}
-              title={item.title} 
-              date={item.date} 
-              icon={item.icon} 
+              title={item.title}
+              date={item.date}
+              icon={item.icon}
             />
           ))}
         </View>
-
-        {/* Padding for bottom nav */}
-        <View style={{ height: 48 }} />
-
       </ScrollView>
     </GradientBackground>
   );

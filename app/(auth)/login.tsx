@@ -14,17 +14,17 @@ import {
   Divider
 } from 'react-native-paper';
 import { router } from 'expo-router';
-import GradientBackground from '../../components/GradientBackground';
-import AuthHeader from '../../components/AuthHeader';
-import { colors } from '../../theme/colors';
-import { useAuthStore } from '../../store/authStore';
+import GradientBackground from '@/components/GradientBackground';
+import AuthHeader from '@/components/AuthHeader';
+import { colors } from '@/theme/colors';
+import { useAuthStore } from '@/store/authStore';
 
 export default function Login() {
   const [employeeId, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const login = useAuthStore((state) => state.login);
+  const login = useAuthStore((state: any) => state.login);
 
   const handleLogin = async () => {
     // Basic mock logic
@@ -35,7 +35,7 @@ export default function Login() {
       employeeId: employeeId || 'EMP-12345'
     };
     await login('dummy-token', mockUser);
-    router.replace('/(tabs)/dashboard');
+    router.replace('/(trainee)/(tabs)/dashboard');
   };
 
   return (

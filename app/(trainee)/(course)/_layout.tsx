@@ -11,7 +11,7 @@ export default function CourseLayout() {
                     headerTitle: "",
                     headerShown: true,
                     headerTitleStyle: { color: "white" },
-                    headerTintColor: "white",
+                    headerTintColor: "white"
                 }
             }
         />
