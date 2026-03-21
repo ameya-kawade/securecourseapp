@@ -84,24 +84,8 @@ const Header = () => (
   </View>
 );
 
-const TabBar = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) => (
-  <View className="bg-[#1A2235] mx-5 mt-5 p-1 rounded-xl flex-row">
-    {TABS.map((tab) => {
-      const isActive = activeTab === tab;
-      return (
-        <TouchableOpacity
-          key={tab}
-          onPress={() => setActiveTab(tab)}
-          className={`flex-1 py-2.5 items-center rounded-lg ${isActive ? 'bg-[#0D6EFD]' : 'bg-transparent'}`}
-        >
-          <Text className={`text-sm font-semibold ${isActive ? 'text-white' : 'text-[#94A3B8]'}`}>
-            {tab}
-          </Text>
-        </TouchableOpacity>
-      );
-    })}
-  </View>
-);
+import { TabView, TabBar } from 'react-native-tab-view';
+import { useWindowDimensions } from 'react-native';
 
 const SessionCard = ({ session }: { session: ScheduleSession }) => {
   // Configuration maps for different session types
@@ -254,7 +238,64 @@ const BottomNavBar = () => (
 // --- Main Screen Component ---
 
 export default function MyScheduleScreen() {
-  const [activeTab, setActiveTab] = useState('Upcoming');
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'upcoming', title: 'Upcoming' },
+    { key: 'today', title: 'Today' },
+    { key: 'past', title: 'Past' },
+  ]);
+
+  const UpcomingRoute = () => (
+    <ScrollView className="flex-1 mt-6" showsVerticalScrollIndicator={false}>
+      {SCHEDULE_DATA.map((session) => (
+        <SessionCard key={session.id} session={session} />
+      ))}
+      <View className="h-24" />
+    </ScrollView>
+  );
+
+  const TodayRoute = () => (
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-[#94A3B8]">No sessions today.</Text>
+    </View>
+  );
+
+  const PastRoute = () => (
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-[#94A3B8]">No past sessions.</Text>
+    </View>
+  );
+
+  const renderScene = ({ route }: any) => {
+    switch (route.key) {
+      case 'upcoming':
+        return <UpcomingRoute />;
+      case 'today':
+        return <TodayRoute />;
+      case 'past':
+        return <PastRoute />;
+      default:
+        return null;
+    }
+  };
+
+  const renderTabBar = (props: any) => (
+    <View className="mx-5 mt-5">
+      <TabBar
+        {...props}
+        indicatorStyle={{ backgroundColor: '#0D6EFD', height: '100%', borderRadius: 8 }}
+        style={{ backgroundColor: '#1A2235', borderRadius: 12, elevation: 0, padding: 4 }}
+        activeColor="white"
+        inactiveColor="#94A3B8"
+        renderLabel={({ route, focused, color }) => (
+          <Text className={`text-sm font-semibold`} style={{ color, zIndex: 1 }}>
+            {route.title}
+          </Text>
+        )}
+      />
+    </View>
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-[#121A27] pt-5">
@@ -262,21 +303,13 @@ export default function MyScheduleScreen() {
 
       <Header />
 
-      <TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      <ScrollView className="flex-1 mt-6" showsVerticalScrollIndicator={false}>
-        {SCHEDULE_DATA.map((session) => (
-          <SessionCard key={session.id} session={session} />
-        ))}
-        {/* Padding for FAB overlap */}
-        <View className="h-24" />
-      </ScrollView>
-
-      {/* Floating Action Button */}
-      {/* <FAB /> */}
-
-      {/* Bottom Navigation */}
-      {/* <BottomNavBar /> */}
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        renderTabBar={renderTabBar}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+      />
     </SafeAreaView>
   );
 }

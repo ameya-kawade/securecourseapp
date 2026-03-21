@@ -90,28 +90,8 @@ const SearchBar = () => (
   </View>
 );
 
-const Tabs = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) => (
-  <View className="flex-row border-b border-[#1E293B] mt-2">
-    {TABS.map((tab) => {
-      const isActive = activeTab === tab;
-      return (
-        <TouchableOpacity
-          key={tab}
-          onPress={() => setActiveTab(tab)}
-          className={`flex-1 items-center pb-3 ${isActive ? 'border-b-2 border-[#2563EB]' : ''}`}
-        >
-          <Text
-            className={`text-sm font-semibold ${isActive ? 'text-[#3B82F6]' : 'text-[#94A3B8]'
-              }`}
-          >
-            {tab}
-          </Text>
-        </TouchableOpacity>
-      );
-    })}
-  </View>
-);
-
+import { TabView, TabBar } from 'react-native-tab-view';
+import { useWindowDimensions } from 'react-native';
 
 const CourseCard = ({ course }: { course: Course }) => {
   const router = useRouter();
@@ -169,7 +149,58 @@ const CourseCard = ({ course }: { course: Course }) => {
 // --- Main Screen ---
 
 export default function Courses() {
-  const [activeTab, setActiveTab] = useState('Completed');
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(2);
+  const [routes] = useState([
+    { key: 'allocated', title: 'Allocated' },
+    { key: 'in_progress', title: 'In-Progress' },
+    { key: 'completed', title: 'Completed' },
+  ]);
+
+  const AllocatedRoute = () => (
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-[#94A3B8]">No allocated courses.</Text>
+    </View>
+  );
+
+  const InProgressRoute = () => (
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-[#94A3B8]">No courses in progress.</Text>
+    </View>
+  );
+
+  const CompletedRoute = () => (
+    <ScrollView className="flex-1 mt-4" showsVerticalScrollIndicator={false}>
+      {COMPLETED_COURSES.map((course) => (
+        <CourseCard key={course.id} course={course} />
+      ))}
+      <View className="h-6" />
+    </ScrollView>
+  );
+
+  const renderScene = ({ route }: any) => {
+    switch (route.key) {
+      case 'allocated':
+        return <AllocatedRoute />;
+      case 'in_progress':
+        return <InProgressRoute />;
+      case 'completed':
+        return <CompletedRoute />;
+      default:
+        return null;
+    }
+  };
+
+  const renderTabBar = (props: any) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: '#2563EB', height: 2 }}
+      style={{ backgroundColor: 'transparent', borderBottomWidth: 1, borderColor: '#1E293B', elevation: 0 }}
+      activeColor="#3B82F6"
+      inactiveColor="#94A3B8"
+      labelStyle={{ fontWeight: '600', textTransform: 'none', fontSize: 14 }}
+    />
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-[#0F172A] pt-5">
@@ -177,15 +208,13 @@ export default function Courses() {
       {/* 
       <Header /> */}
       <SearchBar />
-      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      <ScrollView className="flex-1 mt-4" showsVerticalScrollIndicator={false}>
-        {COMPLETED_COURSES.map((course) => (
-          <CourseCard key={course.id} course={course} />
-        ))}
-        {/* Extra padding at the bottom so the last item isn't hidden behind the nav */}
-        <View className="h-6" />
-      </ScrollView>
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        renderTabBar={renderTabBar}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+      />
     </SafeAreaView>
   );
 }

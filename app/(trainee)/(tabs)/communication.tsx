@@ -1,5 +1,7 @@
 // src/screens/CommunicationsScreen.tsx
 import React, { useState } from 'react';
+import { useWindowDimensions } from 'react-native';
+import { TabView, TabBar } from 'react-native-tab-view';
 import { View, Text, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -80,39 +82,6 @@ const Header = () => (
   </View>
 );
 
-const TabSwitcher = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) => (
-  <View className="bg-[#1A2235] mx-4 mt-4 p-1 rounded-2xl flex-row border border-[#2A3447]">
-    <TouchableOpacity
-      onPress={() => setActiveTab('notices')}
-      className={`flex-1 flex-row items-center justify-center py-3.5 rounded-xl ${activeTab === 'notices' ? 'bg-[#0D6EFD]' : 'bg-transparent'
-        }`}
-    >
-      <MaterialCommunityIcons
-        name="bullhorn-outline"
-        size={20}
-        color={activeTab === 'notices' ? 'white' : '#94A3B8'}
-      />
-      <Text className={`ml-2 font-semibold text-sm ${activeTab === 'notices' ? 'text-white' : 'text-[#94A3B8]'}`}>
-        Notices
-      </Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() => setActiveTab('messages')}
-      className={`flex-1 flex-row items-center justify-center py-3.5 rounded-xl ${activeTab === 'messages' ? 'bg-[#0D6EFD]' : 'bg-transparent'
-        }`}
-    >
-      <MaterialCommunityIcons
-        name="message-outline"
-        size={20}
-        color={activeTab === 'messages' ? 'white' : '#94A3B8'}
-      />
-      <Text className={`ml-2 font-semibold text-sm ${activeTab === 'messages' ? 'text-white' : 'text-[#94A3B8]'}`}>
-        Messages
-      </Text>
-    </TouchableOpacity>
-  </View>
-);
 
 const SectionHeader = () => (
   <View className="flex-row justify-between items-center px-4 mt-8 mb-4">
@@ -239,22 +208,72 @@ const BottomNavBar = () => (
 // --- Main Screen ---
 
 export default function CommunicationsScreen() {
-  const [activeTab, setActiveTab] = useState('notices');
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'notices', title: 'Notices', icon: 'bullhorn-outline' },
+    { key: 'messages', title: 'Messages', icon: 'message-outline' },
+  ]);
+
+  const NoticesRoute = () => (
+    <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <SectionHeader />
+      <View className="pb-24">
+        {NOTICES.map((notice) => (
+          <NoticeCard key={notice.id} notice={notice} />
+        ))}
+      </View>
+    </ScrollView>
+  );
+
+  const MessagesRoute = () => (
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-[#94A3B8]">No messages yet.</Text>
+    </View>
+  );
+
+  const renderScene = ({ route }: any) => {
+    switch (route.key) {
+      case 'notices':
+        return <NoticesRoute />;
+      case 'messages':
+        return <MessagesRoute />;
+      default:
+        return null;
+    }
+  };
+
+  const renderTabBar = (props: any) => (
+    <View className="px-4 mt-4">
+      <TabBar
+        {...props}
+        indicatorStyle={{ backgroundColor: '#0D6EFD', height: 4, borderRadius: 2 }}
+        style={{ backgroundColor: '#1A2235', borderRadius: 12, elevation: 0 }}
+        activeColor="white"
+        inactiveColor="#94A3B8"
+        renderIcon={({ route, color }) => (
+          <MaterialCommunityIcons name={route.icon as any} size={20} color={color} />
+        )}
+        renderLabel={({ route, focused, color }) => (
+          <Text className={`font-semibold text-sm`} style={{ color, marginLeft: 8 }}>
+            {route.title}
+          </Text>
+        )}
+        tabStyle={{ flexDirection: 'row', alignItems: 'center' }}
+      />
+    </View>
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-[#121A27] pt-5">
       <StatusBar barStyle="light-content" backgroundColor="#121A27" />
-      <TabSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <SectionHeader />
-
-        <View className="pb-24">
-          {NOTICES.map((notice) => (
-            <NoticeCard key={notice.id} notice={notice} />
-          ))}
-        </View>
-      </ScrollView>
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        renderTabBar={renderTabBar}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+      />
     </SafeAreaView>
   );
 }
