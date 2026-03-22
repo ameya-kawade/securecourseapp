@@ -8,7 +8,7 @@ export default function Document() {
     const headerHeight = useHeaderHeight();
 
     return (
-        <SafeAreaView edges={['top', 'left', 'right']} className='flex flex-1 p-10 bg-[#0B1120]' style={{ paddingTop: 50 }}>
+        <SafeAreaView className='flex flex-1 bg-[#0B1120]'>
             <StatusBar style='light' />
             <Text className='text-white'>Document</Text>
         </SafeAreaView>

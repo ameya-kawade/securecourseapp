@@ -203,7 +203,7 @@ export default function Courses() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0F172A] pt-5">
+    <SafeAreaView className="flex-1 bg-[#0F172A]">
       <StatusBar barStyle="light-content" backgroundColor="#0F172A" />
       {/* 
       <Header /> */}

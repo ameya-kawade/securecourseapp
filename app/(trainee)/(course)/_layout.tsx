@@ -7,7 +7,7 @@ export default function CourseLayout() {
         <Stack
             screenOptions={
                 {
-                    headerBackground: () => <View style={{ backgroundColor: "#0B1120" }} />,
+                    headerStyle: { backgroundColor: "#0B1120" },
                     headerTitle: "",
                     headerShown: true,
                     headerTitleStyle: { color: "white" },

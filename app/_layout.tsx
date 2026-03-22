@@ -24,6 +24,8 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(trainee)/(tabs)" />
+        <Stack.Screen name="(trainer)/(tabs)" />
+        <Stack.Screen name="(trainer)/create-course" />
       </Stack>
     </PaperProvider>
   );

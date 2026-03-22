@@ -35,7 +35,8 @@ export default function Login() {
       employeeId: employeeId || 'EMP-12345'
     };
     await login('dummy-token', mockUser);
-    router.replace('/(trainee)/(tabs)/dashboard');
+    // router.replace('/(trainee)/(tabs)/dashboard');
+    router.replace('/(trainer)/(tabs)/home');
   };
 
   return (
@@ -126,6 +127,16 @@ export default function Login() {
                 labelStyle={{ color: colors.primary, fontSize: 14, fontWeight: '700' }}
               >
                 Create Account
+              </Button>
+            </View>
+            <View>
+              <Button
+                mode="text"
+                compact
+                onPress={() => router.push('/(auth)/verifyOtp')}
+                labelStyle={{ color: colors.primary, fontSize: 14, fontWeight: '700' }}
+              >
+                Verify OTP
               </Button>
             </View>
           </Surface>

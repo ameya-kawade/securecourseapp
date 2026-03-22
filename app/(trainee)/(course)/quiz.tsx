@@ -154,7 +154,7 @@ export default function Quiz() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#0F172A' }}>
-            <View style={{ flex: 1, paddingTop: headerHeight }}>
+            <View style={{ flex: 1 }}>
 
                 <StatusBar barStyle="light-content" backgroundColor="#0F172A" />
 
